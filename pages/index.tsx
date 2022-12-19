@@ -1,6 +1,12 @@
 import Head from "next/head";
+import { trpc } from "../utils/trpc";
 
 export default function Home() {
+  const hello = trpc.hello.useQuery({ text: "test" });
+  if (!hello.data) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <>
       <Head>
@@ -10,6 +16,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <h1 className="text-3xl font-bold underline">Hello world!</h1>
+      <>{hello.data.greeting}</>
     </>
   );
 }

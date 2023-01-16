@@ -1,3 +1,4 @@
+import { Box, Divider, Stack } from '@mui/material'
 import * as React from 'react'
 import { useState } from 'react'
 
@@ -28,11 +29,11 @@ export function SearchResults(props: ISearchResultsProps) {
     } else {
         if (results.data.results) {
             return (
-                <div>
+                <Stack spacing={2}>
                     {results.data.results.map((result) => (
                         <SearchResult result={result} key={result.id} />
                     ))}
-                </div>
+                </Stack>
             )
         } else {
             return <></>

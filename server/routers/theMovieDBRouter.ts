@@ -17,7 +17,7 @@ const TVResult = z.object({
     backdrop_path: z.string().nullable(),
     vote_average: z.number(),
     overview: z.string(),
-    first_air_date: z.string().nullable(),
+    first_air_date: z.string().optional(),
     origin_country: z.array(z.string()),
     genre_ids: z.array(z.number()),
     original_language: z.string(),
@@ -64,7 +64,7 @@ export const theMovieDBRouter = router({
                 })
         }),
     getImageConfig: publicProcedure.query(() => {
-        return client.get('/config').then((response) => {
+        return client.get('/configuration').then((response) => {
             return imageConfig.parse(response.data)
         })
     }),

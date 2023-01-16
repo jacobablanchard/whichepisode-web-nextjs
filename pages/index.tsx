@@ -1,11 +1,12 @@
 import SearchIcon from '@mui/icons-material/Search'
-import { Input, InputAdornment, Stack } from '@mui/material'
+import { Container, Input, InputAdornment, Stack } from '@mui/material'
 import CssBaseline from '@mui/material/CssBaseline'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
 import Head from 'next/head'
 import { ChangeEventHandler, useRef, useState } from 'react'
 
 import { SearchResults } from '../components/SearchResults'
+import ImageConfigProvider from '../hooks/useImageConfig'
 import { trpc } from '../utils/trpc'
 
 const darkTheme = createTheme({
@@ -41,24 +42,27 @@ export default function Home() {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <ThemeProvider theme={darkTheme}>
-                <CssBaseline />
-                <Stack m={3}>
-                    <Input
-                        id="input-with-icon-adornment"
-                        startAdornment={
-                            <InputAdornment position="start">
-                                <SearchIcon />
-                            </InputAdornment>
-                        }
-                        placeholder="Enter a show you want to search for"
-                        onChange={onQueryStringChanged}
-                        value={queryString}
-                    />
-                    <SearchResults
-                        queryString={queryString}
-                        ImageConfigurations={configResult.data}
-                    />
-                </Stack>
+                <ImageConfigProvider>
+                    <CssBaseline />
+                    <Stack m={3}>
+                        <Input
+                            id="input-with-icon-adornment"
+                            startAdornment={
+                                <InputAdornment position="start">
+                                    <SearchIcon />
+                                </InputAdornment>
+                            }
+                            placeholder="Enter a show you want to search for"
+                            onChange={onQueryStringChanged}
+                            value={queryString}
+                            sx={{ mb: 2 }}
+                        />
+                        <SearchResults
+                            queryString={queryString}
+                            ImageConfigurations={configResult.data}
+                        />
+                    </Stack>
+                </ImageConfigProvider>
             </ThemeProvider>
         </>
     )

@@ -1,3 +1,4 @@
+import ImageNotSupportedOutlinedIcon from '@mui/icons-material/ImageNotSupportedOutlined'
 import { Box, Stack, Typography } from '@mui/material'
 import { height } from '@mui/system'
 import Image from 'next/image'
@@ -16,13 +17,29 @@ export function SearchResult(props: ISearchResultProps) {
     const imageWidth = imageConfig?.images.poster_sizes[0] ?? ''
 
     return (
-        <Stack direction={'row'} alignItems={'center'} position={'relative'}>
-            <Image
-                src={`${imageConfig?.images.secure_base_url}${imageWidth}${props.result.poster_path}`}
-                alt={`${props.result.name} poster`}
-                width={parseInt(imageWidth?.slice(1))}
-                height={125}
-            />
+        <Stack
+            direction={'row'}
+            alignItems={'center'}
+            position={'relative'}
+            spacing={1}
+        >
+            <Box>
+                {props.result.poster_path ? (
+                    <Image
+                        src={`${imageConfig?.images.secure_base_url}${imageWidth}${props.result.poster_path}`}
+                        alt={`${props.result.name} poster`}
+                        width={parseInt(imageWidth?.slice(1))}
+                        height={125}
+                    />
+                ) : (
+                    <ImageNotSupportedOutlinedIcon
+                        sx={{
+                            width: parseInt(imageWidth?.slice(1)),
+                            height: 125,
+                        }}
+                    />
+                )}
+            </Box>
             <div>{props.result.name} </div>
         </Stack>
     )

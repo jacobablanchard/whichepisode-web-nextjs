@@ -10,6 +10,7 @@ import { TVResultType } from '../server/routers/theMovieDBRouter'
 
 export interface ISearchResultProps {
     result: TVResultType
+    onClick: (SelectedShow: TVResultType) => void
 }
 
 export function SearchResult(props: ISearchResultProps) {
@@ -39,8 +40,8 @@ export function SearchResult(props: ISearchResultProps) {
         <Stack
             direction={'row'}
             alignItems={'center'}
-            position={'relative'}
             spacing={1}
+            onClick={() => props.onClick(props.result)}
         >
             <Box>
                 {props.result.poster_path ? (

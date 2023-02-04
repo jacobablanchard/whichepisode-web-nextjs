@@ -2,13 +2,14 @@ import { Box, Divider, Stack } from '@mui/material'
 import * as React from 'react'
 import { useState } from 'react'
 
-import { ImageConfig } from '../server/routers/theMovieDBRouter'
+import { ImageConfig, TVResultType } from '../server/routers/theMovieDBRouter'
 import { trpc } from '../utils/trpc'
 import { SearchResult } from './SearchResult'
 
 export interface ISearchResultsProps {
     queryString: string
     ImageConfigurations: ImageConfig | undefined
+    onShowSelected: (SelectedShow: TVResultType) => void
 }
 
 export function SearchResults(props: ISearchResultsProps) {
@@ -31,7 +32,11 @@ export function SearchResults(props: ISearchResultsProps) {
             return (
                 <Stack spacing={2}>
                     {results.data.results.map((result) => (
-                        <SearchResult result={result} key={result.id} />
+                        <SearchResult
+                            result={result}
+                            key={result.id}
+                            onClick={props.onShowSelected}
+                        />
                     ))}
                 </Stack>
             )

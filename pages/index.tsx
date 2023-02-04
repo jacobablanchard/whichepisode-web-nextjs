@@ -1,12 +1,14 @@
 import SearchIcon from '@mui/icons-material/Search'
-import { Container, Input, InputAdornment, Stack } from '@mui/material'
+import { Container, Divider, Input, InputAdornment, Stack } from '@mui/material'
 import CssBaseline from '@mui/material/CssBaseline'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
 import Head from 'next/head'
 import { ChangeEventHandler, useRef, useState } from 'react'
 
 import { SearchResults } from '../components/SearchResults'
+import { SelectedShow } from '../components/SelectedShow'
 import ImageConfigProvider from '../hooks/useImageConfig'
+import { TVResultType } from '../server/routers/theMovieDBRouter'
 import { trpc } from '../utils/trpc'
 
 const darkTheme = createTheme({
@@ -21,6 +23,7 @@ export default function Home() {
         cacheTime: 12 * 60 * 60 * 1000,
         // hours->minutes->seconds->miliseconds
     })
+    const [selectedShow, setSelectedShow] = useState<null | TVResultType>(null)
     const onQueryStringChanged: ChangeEventHandler<HTMLInputElement> = (
         event
     ) => {
@@ -57,10 +60,15 @@ export default function Home() {
                             value={queryString}
                             sx={{ mb: 2 }}
                         />
-                        <SearchResults
-                            queryString={queryString}
-                            ImageConfigurations={configResult.data}
-                        />
+                        <Stack direction={'row'}>
+                            <SearchResults
+                                queryString={queryString}
+                                ImageConfigurations={configResult.data}
+                                onShowSelected={setSelectedShow}
+                            />
+                            <Divider orientation="vertical" flexItem />
+                            <SelectedShow show={selectedShow} />
+                        </Stack>
                     </Stack>
                 </ImageConfigProvider>
             </ThemeProvider>

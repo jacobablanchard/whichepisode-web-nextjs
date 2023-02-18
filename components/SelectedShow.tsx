@@ -1,4 +1,4 @@
-import { Stack, Typography } from '@mui/material';
+import { Box, Stack, Typography } from '@mui/material';
 import Image from 'next/image';
 import * as React from 'react';
 import { useContext } from 'react';
@@ -18,18 +18,28 @@ export function SelectedShow(props: ISelectedShowProps) {
 
     return (
         props.show && (
-            <Stack position={'relative'} padding={1}>
-                <Typography>{props.show?.name}</Typography>
-                <Image
-                    src={`${imageConfig?.images.secure_base_url}${imageWidth}${props.show?.backdrop_path}`}
-                    alt={`${props.show.name} backdrop`}
-                    fill
-                    placeholder="blur"
-                    blurDataURL={imageBlurURL}
-                    style={{
-                        objectFit: 'scale-down',
-                    }}
-                />
+            <Stack
+                padding={1}
+                position={'relative'}
+                direction={'column'}
+                flexGrow={1}
+            >
+                <Typography variant="h4" component="h1">
+                    {props.show?.name}
+                </Typography>
+                <Stack position={'relative'} direction={'column'} flexGrow={1}>
+                    <Image
+                        src={`${imageConfig?.images.secure_base_url}${imageWidth}${props.show?.backdrop_path}`}
+                        alt={`${props.show.name} backdrop`}
+                        fill
+                        placeholder="blur"
+                        blurDataURL={imageBlurURL}
+                        style={{
+                            objectFit: 'scale-down',
+                            height: '',
+                        }}
+                    />
+                </Stack>
             </Stack>
         )
     );

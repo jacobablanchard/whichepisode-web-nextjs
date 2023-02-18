@@ -1,34 +1,34 @@
-import SearchIcon from '@mui/icons-material/Search'
-import { Container, Divider, Input, InputAdornment, Stack } from '@mui/material'
-import CssBaseline from '@mui/material/CssBaseline'
-import { ThemeProvider, createTheme } from '@mui/material/styles'
-import Head from 'next/head'
-import { ChangeEventHandler, useRef, useState } from 'react'
+import SearchIcon from '@mui/icons-material/Search';
+import { Divider, Input, InputAdornment, Stack } from '@mui/material';
+import CssBaseline from '@mui/material/CssBaseline';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import Head from 'next/head';
+import { ChangeEventHandler, useRef, useState } from 'react';
 
-import { SearchResults } from '../components/SearchResults'
-import { SelectedShow } from '../components/SelectedShow'
-import ImageConfigProvider from '../hooks/useImageConfig'
-import { TVResultType } from '../server/routers/theMovieDBRouter'
-import { trpc } from '../utils/trpc'
+import { SearchResults } from '../components/SearchResults';
+import { SelectedShow } from '../components/SelectedShow';
+import ImageConfigProvider from '../hooks/useImageConfig';
+import { TVResultType } from '../server/routers/theMovieDBRouter';
+import { trpc } from '../utils/trpc';
 
 const darkTheme = createTheme({
     palette: {
         mode: 'dark',
     },
-})
+});
 
 export default function Home() {
-    const [queryString, setQueryString] = useState('')
+    const [queryString, setQueryString] = useState('');
     const configResult = trpc.theMovieDB.getImageConfig.useQuery(undefined, {
         cacheTime: 12 * 60 * 60 * 1000,
         // hours->minutes->seconds->miliseconds
-    })
-    const [selectedShow, setSelectedShow] = useState<null | TVResultType>(null)
+    });
+    const [selectedShow, setSelectedShow] = useState<null | TVResultType>(null);
     const onQueryStringChanged: ChangeEventHandler<HTMLInputElement> = (
         event
     ) => {
-        setQueryString(event.target.value)
-    }
+        setQueryString(event.target.value);
+    };
 
     return (
         <>
@@ -73,5 +73,5 @@ export default function Home() {
                 </ImageConfigProvider>
             </ThemeProvider>
         </>
-    )
+    );
 }

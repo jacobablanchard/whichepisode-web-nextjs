@@ -5,17 +5,18 @@ import * as React from 'react';
 import { useContext } from 'react';
 
 import useImageBlur from '../hooks/useImageBlur';
-import { ImageConfigContext } from '../hooks/useImageConfig';
-import { TVResultType } from '../server/routers/theMovieDBRouter';
+import useImageConfig from '../hooks/useImageConfig';
+import { TVShowSearthResultType } from '../server/routers/theMovieDBRouter';
+import { trpc } from '../utils/trpc';
 
 export interface ISearchResultProps {
-    result: TVResultType;
-    onClick: (SelectedShow: TVResultType) => void;
+    result: TVShowSearthResultType;
+    onClick: (SelectedShow: TVShowSearthResultType) => void;
 }
 
 export function SearchResult(props: ISearchResultProps) {
-    const imageConfig = useContext(ImageConfigContext);
-    const imageWidth = imageConfig?.images.poster_sizes[0] ?? '';
+    const imageConfig = useImageConfig();
+    const imageWidth = imageConfig?.data?.images.poster_sizes[0] ?? '';
     const imageBlurURL = useImageBlur(parseInt(imageWidth?.slice(1)), 125);
     const theme = useTheme();
 
@@ -34,7 +35,7 @@ export function SearchResult(props: ISearchResultProps) {
             <Box>
                 {props.result.poster_path ? (
                     <Image
-                        src={`${imageConfig?.images.secure_base_url}${imageWidth}${props.result.poster_path}`}
+                        src={`${imageConfig?.data?.images.secure_base_url}${imageWidth}${props.result.poster_path}`}
                         alt={`${props.result.name} poster`}
                         width={parseInt(imageWidth?.slice(1))}
                         height={125}

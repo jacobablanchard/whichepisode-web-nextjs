@@ -1,15 +1,10 @@
-import SearchIcon from '@mui/icons-material/Search';
-import { Divider, Input, InputAdornment, Stack } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import Head from 'next/head';
-import { ChangeEventHandler, useRef, useState } from 'react';
 
-import { SearchResults } from '../components/SearchResults';
-import { SelectedShow } from '../components/SelectedShow';
+import { MainScreen } from '../components/MainScreen';
 import ImageConfigProvider from '../hooks/useImageConfig';
-import { TVResultType } from '../server/routers/theMovieDBRouter';
-import { trpc } from '../utils/trpc';
 
 const darkTheme = createTheme({
     palette: {
@@ -18,20 +13,9 @@ const darkTheme = createTheme({
 });
 
 export default function Home() {
-    const [queryString, setQueryString] = useState('');
-    const configResult = trpc.theMovieDB.getImageConfig.useQuery(undefined, {
-        cacheTime: 12 * 60 * 60 * 1000,
-        // hours->minutes->seconds->miliseconds
-    });
-    const [selectedShow, setSelectedShow] = useState<null | TVResultType>(null);
-    const onQueryStringChanged: ChangeEventHandler<HTMLInputElement> = (
-        event
-    ) => {
-        setQueryString(event.target.value);
-    };
-
     return (
         <>
+            <ReactQueryDevtools initialIsOpen={false} />
             <Head>
                 <title>Which Episode?</title>
                 <meta
@@ -45,32 +29,10 @@ export default function Home() {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <ThemeProvider theme={darkTheme}>
-                <ImageConfigProvider>
-                    <CssBaseline />
-                    <Stack m={3}>
-                        <Input
-                            id="input-with-icon-adornment"
-                            startAdornment={
-                                <InputAdornment position="start">
-                                    <SearchIcon />
-                                </InputAdornment>
-                            }
-                            placeholder="Enter a show you want to search for"
-                            onChange={onQueryStringChanged}
-                            value={queryString}
-                            sx={{ mb: 2 }}
-                        />
-                        <Stack direction={'row'}>
-                            <SearchResults
-                                queryString={queryString}
-                                ImageConfigurations={configResult.data}
-                                onShowSelected={setSelectedShow}
-                            />
-                            <Divider orientation="vertical" flexItem />
-                            <SelectedShow show={selectedShow} />
-                        </Stack>
-                    </Stack>
-                </ImageConfigProvider>
+                {/* <ImageConfigProvider> */}
+                <CssBaseline />
+                <MainScreen />
+                {/* </ImageConfigProvider> */}
             </ThemeProvider>
         </>
     );

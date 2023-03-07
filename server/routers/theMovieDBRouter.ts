@@ -1,16 +1,16 @@
-import axios from 'axios'
-import { z } from 'zod'
+import axios from 'axios';
+import { z } from 'zod';
 
-import { publicProcedure, router } from '../trpc'
+import { publicProcedure, router } from '../trpc';
 
-const base_url = 'https://api.themoviedb.org/3'
+const base_url = 'https://api.themoviedb.org/3';
 
 const client = axios.create({
     baseURL: base_url,
     params: { api_key: process.env.TMDB_API_KEY },
-})
+});
 
-const TVResult = z.object({
+const TVShowSearchResult = z.object({
     poster_path: z.string().nullable(),
     popularity: z.number(),
     id: z.number(),
@@ -24,16 +24,32 @@ const TVResult = z.object({
     vote_count: z.number(),
     name: z.string(),
     original_name: z.string(),
-})
+});
 
-export type TVResultType = z.output<typeof TVResult>
+export type TVShowSearthResultType = z.output<typeof TVShowSearchResult>;
 
-export const searchResponse = z.object({
+export const TVSearchResponse = z.object({
     page: z.number(),
-    results: z.array(TVResult),
+    results: z.array(TVShowSearchResult),
     total_results: z.number(),
     total_pages: z.number(),
-})
+});
+
+export const TVShowSeason = z.object({
+    episode_count: z.number(),
+    id: z.number(),
+    name: z.string(),
+    overview: z.string(),
+    poster_path: z.string().nullable(),
+    season_number: z.number(),
+});
+
+export const TVShowDetails = z.object({
+    first_air_date: z.string(),
+    number_of_episodes: z.number(),
+    number_of_seasons: z.number(),
+    seasons: z.array(TVShowSeason),
+});
 
 const imageConfig = z.object({
     images: z.object({
@@ -45,8 +61,8 @@ const imageConfig = z.object({
         profile_sizes: z.array(z.string()),
         still_sizes: z.array(z.string()),
     }),
-})
-export type ImageConfig = z.infer<typeof imageConfig>
+});
+export type ImageConfig = z.infer<typeof imageConfig>;
 
 export const theMovieDBRouter = router({
     search: publicProcedure
@@ -55,17 +71,29 @@ export const theMovieDBRouter = router({
                 query: z.string().trim().min(1),
             })
         )
-        .output(searchResponse)
+        .output(TVSearchResponse)
         .query(({ input }) => {
             return client
                 .get('/search/tv', { params: { query: input.query } })
                 .then((response) => {
-                    return searchResponse.parse(response.data)
-                })
+                    return TVSearchResponse.parse(response.data);
+                });
         }),
     getImageConfig: publicProcedure.query(() => {
         return client.get('/configuration').then((response) => {
-            return imageConfig.parse(response.data)
-        })
+            return imageConfig.parse(response.data);
+        });
     }),
-})
+    getShowData: publicProcedure
+        .input(
+            z.object({
+                tv_id: z.number(),
+            })
+        )
+        .output(TVShowDetails)
+        .query(({ input }) => {
+            return client.get(`/tv/${input.tv_id}`).then((response) => {
+                return TVShowDetails.parse(response.data);
+            });
+        }),
+});

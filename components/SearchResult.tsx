@@ -2,12 +2,10 @@ import ImageNotSupportedOutlinedIcon from '@mui/icons-material/ImageNotSupported
 import { Box, Stack, useTheme } from '@mui/material';
 import Image from 'next/image';
 import * as React from 'react';
-import { useContext } from 'react';
 
 import useImageBlur from '../hooks/useImageBlur';
 import useImageConfig from '../hooks/useImageConfig';
 import { TVShowSearthResultType } from '../server/routers/theMovieDBRouter';
-import { trpc } from '../utils/trpc';
 
 export interface ISearchResultProps {
     result: TVShowSearthResultType;

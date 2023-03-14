@@ -1,4 +1,5 @@
-import { Box, Divider, Stack } from '@mui/material';
+import { Box, Stack } from '@mui/material';
+import CircularProgress from '@mui/material/CircularProgress';
 import * as React from 'react';
 import { useState } from 'react';
 
@@ -26,10 +27,16 @@ export function SearchResults(props: ISearchResultsProps) {
         }
     );
 
-    if (results.isLoading) {
-        return <Box width={'33%'}> </Box>;
+    if (results.isFetching) {
+        return (
+            <Stack width={'33%'} alignItems="center">
+                <CircularProgress />
+            </Stack>
+        );
     } else if (results.isError) {
         return <>ERROR</>;
+    } else if (!results.data) {
+        return <Box width={'33%'}></Box>;
     } else {
         if (results.data.results) {
             return (

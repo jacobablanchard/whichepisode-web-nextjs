@@ -4,7 +4,6 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import Head from 'next/head';
 
 import { MainScreen } from '../components/MainScreen';
-import ImageConfigProvider from '../hooks/useImageConfig';
 
 const darkTheme = createTheme({
     palette: {

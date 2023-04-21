@@ -5,7 +5,6 @@ import * as React from 'react';
 import { SearchResults } from '../components/SearchResults';
 import useImageConfig from '../hooks/useImageConfig';
 import { TVShowSearthResultType } from '../server/routers/theMovieDBRouter';
-import { trpc } from '../utils/trpc';
 import { SelectedShow } from './SelectedShow';
 
 export function MainScreen() {

@@ -46,7 +46,7 @@ export function GeneratedShow(props: IGeneratedShowProps) {
     const getNumberOfEpisodesQuery =
         trpc.theMovieDB.getNumberofEpisodesForSeason.useQuery(
             {
-                season: chosenSeason!,
+                season: chosenSeason ?? -1,
                 tv_id: props.tv_id ?? -1,
             },
             {
@@ -63,8 +63,8 @@ export function GeneratedShow(props: IGeneratedShowProps) {
     const episodeData = trpc.theMovieDB.getEpisodeData.useQuery(
         {
             tv_id: props.tv_id ?? -1,
-            season: chosenSeason!,
-            episode: chosenEpisode!,
+            season: chosenSeason ?? -1,
+            episode: chosenEpisode ?? -1,
         },
         {
             enabled: !!chosenSeason && !!chosenEpisode,
@@ -79,13 +79,13 @@ export function GeneratedShow(props: IGeneratedShowProps) {
 
     // When we get showData, then we need to pick a season
     React.useEffect(() => {
-        if (!!showData.data) {
+        if (showData.data) {
             setChosenSeason(getRndInteger(1, showData.data.number_of_seasons));
         }
     }, [showData.data]);
     // When we have a season, and we have the number of episodes in that season, then we need to pick an episode
     React.useEffect(() => {
-        if (!!getNumberOfEpisodesQuery.data) {
+        if (getNumberOfEpisodesQuery.data) {
             setChosenEpisode(getRndInteger(1, getNumberOfEpisodesQuery.data));
         }
     }, [getNumberOfEpisodesQuery.data]);
@@ -111,7 +111,7 @@ export function GeneratedShow(props: IGeneratedShowProps) {
                             if (season === chosenSeason) {
                                 const epi = getRndInteger(
                                     1,
-                                    getNumberOfEpisodesQuery.data!
+                                    getNumberOfEpisodesQuery.data ?? 1
                                 );
                                 console.log(`episode ${epi}`);
                                 setChosenEpisode(epi);

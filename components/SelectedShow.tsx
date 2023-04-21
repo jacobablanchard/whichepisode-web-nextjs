@@ -1,4 +1,4 @@
-import { Button, Grid, Stack, Typography } from '@mui/material';
+import { Grid, Stack, Typography } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
 import Image from 'next/image';
 import * as React from 'react';
@@ -22,10 +22,6 @@ export function SelectedShow(props: ISelectedShowProps) {
         },
         { enabled: !!props.show, refetchOnWindowFocus: false }
     );
-    const [generatedEpisode, setGeneratedEpisode] = React.useState<{
-        season: number;
-        episode: number;
-    }>({ season: 1, episode: 1 });
 
     React.useEffect(() => {
         return () => {

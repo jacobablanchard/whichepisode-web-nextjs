@@ -1,7 +1,6 @@
 import { Box, Stack } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
 import * as React from 'react';
-import { useState } from 'react';
 
 import {
     ImageConfig,
@@ -17,8 +16,6 @@ export interface ISearchResultsProps {
 }
 
 export function SearchResults(props: ISearchResultsProps) {
-    const [queryShouldRun, setQueryShouldRun] = useState(false);
-
     const results = trpc.theMovieDB.search.useQuery(
         { query: props.queryString },
         {

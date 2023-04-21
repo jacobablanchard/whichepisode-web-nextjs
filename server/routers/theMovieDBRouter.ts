@@ -51,6 +51,13 @@ export const TVShowDetails = z.object({
     seasons: z.array(TVShowSeason),
 });
 
+export const TVEpisodeDetails = z.object({
+    air_date: z.string(),
+    name: z.string(),
+    overview: z.string(),
+    still_path: z.nullable(z.string()),
+});
+
 const imageConfig = z.object({
     images: z.object({
         base_url: z.string(),
@@ -95,5 +102,38 @@ export const theMovieDBRouter = router({
             return client.get(`/tv/${input.tv_id}`).then((response) => {
                 return TVShowDetails.parse(response.data);
             });
+        }),
+    getNumberofEpisodesForSeason: publicProcedure
+        .input(
+            z.object({
+                tv_id: z.number(),
+                season: z.number(),
+            })
+        )
+        .output(z.number())
+        .query(async ({ input }) => {
+            return client
+                .get(`/tv/${input.tv_id}/season/${input.season}`)
+                .then((response) => {
+                    return response.data.episodes.length ?? 0;
+                });
+        }),
+    getEpisodeData: publicProcedure
+        .input(
+            z.object({
+                tv_id: z.number(),
+                season: z.number(),
+                episode: z.number(),
+            })
+        )
+        .output(TVEpisodeDetails)
+        .query(({ input }) => {
+            return client
+                .get(
+                    `/tv/${input.tv_id}/season/${input.season}/episode/${input.episode}`
+                )
+                .then((response) => {
+                    return TVEpisodeDetails.parse(response.data);
+                });
         }),
 });

@@ -1,12 +1,12 @@
-import { LocalDining } from '@mui/icons-material';
-import { Grid, Stack, Typography } from '@mui/material';
+import { Button, Grid, Stack, Typography } from '@mui/material';
+import CircularProgress from '@mui/material/CircularProgress';
 import Image from 'next/image';
 import * as React from 'react';
-import { useContext } from 'react';
 
 import useImageConfig from '../hooks/useImageConfig';
 import { TVShowSearthResultType } from '../server/routers/theMovieDBRouter';
 import { trpc } from '../utils/trpc';
+import { GeneratedShow } from './GeneratedShow';
 
 export interface ISelectedShowProps {
     show: TVShowSearthResultType | null;
@@ -15,39 +15,40 @@ export interface ISelectedShowProps {
 export function SelectedShow(props: ISelectedShowProps) {
     const imageConfig = useImageConfig();
     const imageWidth = imageConfig?.data?.images.backdrop_sizes[2] ?? '';
+    const [imageLoading, setImageLoading] = React.useState(true);
     const showData = trpc.theMovieDB.getShowData.useQuery(
         {
             tv_id: props.show?.id ?? -1,
         },
-        { enabled: !!props.show }
+        { enabled: !!props.show, refetchOnWindowFocus: false }
     );
+    const [generatedEpisode, setGeneratedEpisode] = React.useState<{
+        season: number;
+        episode: number;
+    }>({ season: 1, episode: 1 });
 
-    const [imageLoading, setImageLoading] = React.useState(true);
-
-    // React.useEffect(() => {
-    //     return () => {
-    //         setImageLoading(true);
-    //     };
-    // }, []);
+    React.useEffect(() => {
+        return () => {
+            setImageLoading(true);
+        };
+    }, []);
     return (
         props.show && (
             <Stack padding={1} direction={'column'} flex={1}>
                 <Typography variant="h4" component="h1">
                     {props.show?.name}
                 </Typography>
-                <div
+                <Stack
                     style={{
                         width: '100%',
                         height: '100%',
                         position: 'relative',
                         flex: '0 1 15%',
+                        justifyContent: 'center',
+                        alignItems: 'center',
                     }}
                 >
-                    {imageLoading && (
-                        <Typography variant="h4" component="h1">
-                            Loading...
-                        </Typography>
-                    )}
+                    {imageLoading && <CircularProgress />}
                     <Image
                         src={`${imageConfig?.data?.images.secure_base_url}${imageWidth}${props.show?.backdrop_path}`}
                         alt={`${props.show.name} backdrop`}
@@ -59,7 +60,7 @@ export function SelectedShow(props: ISelectedShowProps) {
                         }}
                         placeholder="empty"
                     />
-                </div>
+                </Stack>
                 {showData.isLoading ? (
                     <div>loading...</div>
                 ) : (
@@ -82,6 +83,9 @@ export function SelectedShow(props: ISelectedShowProps) {
                             </Typography>
                         </Grid>
                         <Grid item xs={6}></Grid>
+                        <Grid item xs={12}>
+                            <GeneratedShow tv_id={props.show.id} />
+                        </Grid>
                     </Grid>
                 )}
             </Stack>

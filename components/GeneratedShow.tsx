@@ -113,10 +113,8 @@ export function GeneratedShow(props: IGeneratedShowProps) {
                                     1,
                                     getNumberOfEpisodesQuery.data ?? 1
                                 );
-                                console.log(`episode ${epi}`);
                                 setChosenEpisode(epi);
                             } else {
-                                console.log(`setting to ${season}`);
                                 setChosenSeason(season);
                             }
                         }}

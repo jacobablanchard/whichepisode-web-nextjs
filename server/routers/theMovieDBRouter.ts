@@ -52,7 +52,7 @@ export const TVShowDetails = z.object({
 });
 
 export const TVEpisodeDetails = z.object({
-    air_date: z.string(),
+    air_date: z.string().nullable(),
     name: z.string(),
     overview: z.string(),
     still_path: z.nullable(z.string()),
@@ -79,7 +79,7 @@ export const theMovieDBRouter = router({
             })
         )
         .output(TVSearchResponse)
-        .query(({ input }) => {
+        .query(async ({ input, ctx }) => {
             return client
                 .get('/search/tv', { params: { query: input.query } })
                 .then((response) => {

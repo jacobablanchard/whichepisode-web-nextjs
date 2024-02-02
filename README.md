@@ -1,5 +1,7 @@
 # Which Episode?
 
+![Logo of the project](./.readmeImages/logo.jpg)
+
 Are you someone who has a hard time picking which episode of a show to watch? Look no further! Let WhichEpisode decide for you!
 
 https://whichepisode.jacobblanchard.dev/

@@ -69,11 +69,6 @@ export function GeneratedShow(props: IGeneratedShowProps) {
         {
             enabled: !!chosenSeason && !!chosenEpisode,
             refetchOnWindowFocus: false,
-            onSuccess: (data) => {
-                if (!data.still_path) {
-                    setImageLoading(false);
-                }
-            },
         }
     );
 
@@ -89,6 +84,13 @@ export function GeneratedShow(props: IGeneratedShowProps) {
             setChosenEpisode(getRndInteger(1, getNumberOfEpisodesQuery.data));
         }
     }, [getNumberOfEpisodesQuery.data]);
+    
+    // Handle image loading state when episode data changes
+    React.useEffect(() => {
+        if (episodeData.data && !episodeData.data.still_path) {
+            setImageLoading(false);
+        }
+    }, [episodeData.data]);
 
     if (!showData.data || showData.isError) {
         return <div>ERROR</div>;
